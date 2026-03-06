@@ -6,6 +6,8 @@ A terminal-based user interface (TUI) for interacting with [Meshtastic](https://
 
 This is an independent community project and has no official connection to the Meshtastic core team.
 
+![Screenshot](screenshot.png)
+
 ## Features
 
 * **Live Node Monitoring:** View connected nodes, their hardware models, SNR, hops, and "last seen" status in real-time.
