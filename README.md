@@ -12,7 +12,8 @@ This is an independent community project and has no official connection to the M
 
 * **Live Node Monitoring:** View connected nodes, their hardware models, SNR, hops, and "last seen" status in real-time.
 * **Channel Management:** See available channels and their roles (Primary/Secondary).
-* **Interactive UI:** * Click on a node in the table to prepare a Direct Message (DM).
+* **Interactive UI:**
+  * Click on a node in the table to prepare a Direct Message (DM).
   * Click on a channel in the table (or use keyboard arrows + Enter) to switch your active sending channel.
 * **Chat Log:** Keep track of incoming and outgoing messages. Messages are also saved to `meshtastic_chatlog.txt`.
 * **Bilingual Support:** Available in German (default) and English.
