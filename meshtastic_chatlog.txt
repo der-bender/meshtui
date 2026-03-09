@@ -1,0 +1,9 @@
+
+--- TUI GESTARTET: 09.03.2026 00:21:28 ---
+[SYSTEM] Verbinde mit Node via USB...
+[SYSTEM] Erfolgreich verbunden!
+
+--- TUI GESTARTET: 09.03.2026 00:29:30 ---
+[SYSTEM] Verbinde mit Node via USB...
+[SYSTEM] Erfolgreich verbunden!
+[FEHLER] Verbindung fehlgeschlagen: 'SerialInterface' object has no attribute 'nodes'
