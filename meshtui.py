@@ -175,21 +175,32 @@ class MeshtasticTUI(App):
         if 'decoded' in packet and packet['decoded']['portnum'] == 'TEXT_MESSAGE_APP':
             msg = packet['decoded']['payload'].decode('utf-8')
             sender_id = packet.get('fromId', 'Unknown')
+            to_id = packet.get('toId', '^all') # NEU: Ziel-ID auslesen
             
             sender_name = sender_id
             if sender_id in interface.nodes:
                 sender_name = interface.nodes[sender_id].get('user', {}).get('shortName', sender_id)
             
-            ch_idx = packet.get('channel', 0)
-            ch_name = f"Ch {ch_idx}"
-            try:
-                ch = interface.localNode.channels[ch_idx]
-                if ch.settings.name:
-                    ch_name = ch.settings.name
-                elif ch_idx == 0:
-                    ch_name = self.t("primary")
-            except Exception:
-                pass
+            # NEU: Prüfen, ob es eine Direktnachricht (DM) ist
+            if to_id != '^all':
+                target_name = to_id
+                if to_id in interface.nodes:
+                    # Löst den Namen des Empfängers auf
+                    target_name = interface.nodes[to_id].get('user', {}).get('shortName', to_id)
+                
+                ch_name = f"DM an {target_name}"
+            else:
+                # Normale Kanallogik
+                ch_idx = packet.get('channel', 0)
+                ch_name = f"Ch {ch_idx}"
+                try:
+                    ch = interface.localNode.channels[ch_idx]
+                    if ch.settings.name:
+                        ch_name = ch.settings.name
+                    elif ch_idx == 0:
+                        ch_name = self.t("primary")
+                except Exception:
+                    pass
 
             time_str = datetime.now().strftime('%H:%M:%S')
             self.write_log(f"[{time_str}] [{ch_name}] {sender_name}: {msg}")
@@ -280,7 +291,13 @@ class MeshtasticTUI(App):
                 if self.interface:
                     self.interface.sendText(dm_message, destinationId=target_id)
                     time_str = datetime.now().strftime('%H:%M:%S')
-                    self.write_log(f"[{time_str}] [DM -> {target_id}]: {dm_message}")
+                    
+                    # NEU: Namen des Ziels für den eigenen Log auflösen
+                    target_name = target_id
+                    if target_id in self.interface.nodes:
+                        target_name = self.interface.nodes[target_id].get('user', {}).get('shortName', target_id)
+                        
+                    self.write_log(f"[{time_str}] [DM -> {target_name}]: {dm_message}")
                 else:
                     self.write_log(self.t("err_not_conn"))
             except Exception as e:
