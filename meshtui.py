@@ -343,12 +343,29 @@ class MeshtasticTUI(App):
         except Exception:
             pass
 
-        node_list = list(self.interface.nodes.items())
+        if hasattr(self.interface, 'nodes') and self.interface.nodes:
+            node_list = list(self.interface.nodes.items())
+        elif hasattr(self.interface, 'nodesByNum') and self.interface.nodesByNum:
+            node_list = []
+            for num, node in self.interface.nodesByNum.items():
+                # Sicherheitscheck, falls node kein normales Daten-Wörterbuch ist
+                if not isinstance(node, dict):
+                    continue
+                
+                # Holt die User-Daten sicher (fängt den Fall ab, falls 'user' = None ist)
+                user_data = node.get("user") or {}
+                node_id = user_data.get("id")
+                
+                # Den Knoten nur der Liste hinzufügen, wenn eine gültige String-ID existiert
+                if node_id:
+                    node_list.append((node_id, node))
+        else:
+            node_list = []
 
         def sort_key(item):
             node_id, node = item
             is_mine = 1 if node_id == my_node_id else 0
-            last_heard = node.get('lastHeard', 0)
+            last_heard = node.get('lastHeard') or 0
             return (is_mine, last_heard)
 
         node_list.sort(key=sort_key, reverse=True)
